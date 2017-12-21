@@ -1,4 +1,6 @@
-const port = process.env.PORT || 3001
+require('./config/config');
+
+const port = process.env.PORT
 const mongoose = require('./db/mongoose').connectDB
 const app = require('./app')
 
