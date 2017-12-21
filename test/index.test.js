@@ -3,13 +3,15 @@ const request = require('supertest')
 
 const {app} = require('../index')
 const cliente = require('../models/clientes')
-
+const {ObjectID} = require('mongodb')
 const clientes = [
-  {
+  { 
+    _id: new ObjectID(),
     name:"Cristian",
     email:"cristian@email.com"
   },
   {
+    _id: new ObjectID(),
     name:"Vega",
     email:"email@example.com"
   }
@@ -30,10 +32,10 @@ describe('Post /cli', () => {
    // var name = 'Cristian'
     request(app)
       .post('/cli')
-      .send({client})
+      .send(client)
       .expect(200)
       .expect((res) => {
-        expect(res.body.client).toContain(client)
+        expect(res.body.client.name).toBe(client.name)
       })
       .end((err , res)=>{
       if(err){
@@ -76,6 +78,57 @@ describe('GET /cli', ()=>{
     .expect((res) => {
       expect(res.body.data.length).toBe(2);
     })
+    .end(done);
+  })
+
+  it('should return 400 if client not found', (done) => {
+    let hexId = new ObjectID().toHexString();
+    request(app)
+      .get(`/cli/${hexId}`)
+      .expect(400)
+      .end(done)
+  })
+
+  it('shlud return 404 for non_object ids', (done) => {
+    request(app)
+      .get('/cli/123abd')
+      .expect(404)
+      .end(done);
+  })
+})
+
+describe('Delete /cli', ()=>{
+  it('Should remove a client', (done)=>{
+    let hexId = clientes[1]._id.toHexString();
+
+    request(app)
+      .delete(`/cli/${hexId}`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.client._id).toBe(hexId)
+      })
+      .end((err, res) => {
+        if(err) return done(err)
+      })
+
+      cliente.findById(hexId).then((data) => {
+        expect(data).toNotExist();
+        done();
+      }).catch((e)=>done(e))
+  })
+
+  it('Should return 400 if client do not exist', (done) => {
+    let hexid = new ObjectID().toHexString();
+    request(app)
+      .delete(`/cli/${hexid}`)
+      .expect(400)
+      .end(done)
+  })
+
+  it('Should return 404 if objectID is invalid', (done) => {
+    request(app)
+    .delete('/cli/123abd')
+    .expect(404)
     .end(done);
   })
 })

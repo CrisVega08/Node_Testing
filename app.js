@@ -18,37 +18,37 @@ app.use((req, res, next) =>{
 	next();
 });	
 
-//app.use(api)
-app.post('/cli', (req,res) => {
-	console.log(req.body)
-	var cliente = new Cliente({
-		name: req.body.client.name,
-		email: req.body.client.email
-	})
+app.use(api)
+// app.post('/cli', (req,res) => {
+// 	console.log(req.body)
+// 	var cliente = new Cliente({
+// 		name: req.body.name,
+// 		email: req.body.email
+// 	})
 
-	cliente.save().then((client)=>{
-		res.status(200).send({client})
-	}).catch(() => res.status(400).send('Bad'))
-})
-app.get('/cli', (req,res) => {
-	Cliente.find({})
-	.then(data => {
-		let user = JSON.stringify(data,undefined,2)
-		res.status(200).send({data});
-	})
-	.catch(e => res.status(400).send(e))
-})
+// 	cliente.save().then((client)=>{
+// 		res.status(200).send({client})
+// 	}).catch(() => res.status(400).send('Bad'))
+// })
+// app.get('/cli', (req,res) => {
+// 	Cliente.find({})
+// 	.then(data => {
+// 		let user = JSON.stringify(data,undefined,2)
+// 		res.status(200).send({data});
+// 	})
+// 	.catch(e => res.status(400).send(e))
+// })
 
-app.get('/cli/:id', (req, res) => {
-	let id = req.params.id;
-	if(!ObjectID.isValid(id)){
-		return res.status(404).send();
-	}
-	Cliente.findById(id)
-	.then((client) => {
-		if(!client) res.status(400).send("No existe")
-		res.status(200).send({client})
-	}).catch(e => res.status(400).send(e))
-})
+// app.get('/cli/:id', (req, res) => {
+// 	let id = req.params.id;
+// 	if(!ObjectID.isValid(id)){
+// 		return res.status(404).send();
+// 	}
+// 	Cliente.findById(id)
+// 	.then((client) => {
+// 		if(!client) res.status(400).send("No existe")
+// 		res.status(200).send({client})
+// 	}).catch(e => res.status(400).send(e))
+// })
 
 module.exports = app;
