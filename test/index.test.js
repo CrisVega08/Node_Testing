@@ -132,3 +132,20 @@ describe('Delete /cli', ()=>{
     .end(done);
   })
 })
+
+describe('PATCH /cli/id', ()=> {
+  it('Should update a client', (done) => {
+    let hexId = clientes[0]._id.toHexString()
+    let name = 'Francisco'
+
+    request(app)
+      .patch(`/cli/${hexId}`)
+      .send({name})
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.client.name).toBe(name)
+        expect(res.body.client.updateAt).toBeA('number')
+      })
+      .end(done)
+  })
+})
