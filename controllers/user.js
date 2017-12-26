@@ -1,14 +1,16 @@
 const User = require('../models/user')
+const _ = require('lodash')
+module.exports.store = (req, res) => {
+  let body = _.pick(req.body,['email', 'password', 'name'])
+  let user = new User(body)
 
-module.exports.save = (req, res) => {
-  let user = new User
-  user.name = 'Cristian',
-  user.email = 'cristian,vega08@gmail.com',
-  user.password = '123567',
-  hidden = false
-
+  console.log(user)
   user.save().then((data) => {
-    res.status(200).send({message:'user save!', data:data})
+    return user.generateAuthToken();
+    //res.status(200).send({message:'user save!', data:data})
   })
-  .catch((err) => res.status(400).send('Don save'))
+  .then((token) => {
+    res.header('x-auth', token).status(200).send(user)
+  })
+  .catch((err) => res.status(400).send(err))
 }
