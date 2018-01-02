@@ -41,12 +41,12 @@ var userSchema = new Schema({
   }]
 });
 
-// userSchema.methods.toJSON = function () {
-//   var user = this
-//   var userObject = user.toObject()
+userSchema.methods.toJSON = function () {
+  var user = this
+  var userObject = user.toObject()
 
-//   return _.pick(userObject, ['_id', 'email','name'])
-// }
+  return _.pick(userObject, ['_id', 'email','name'])
+}
 
 userSchema.methods.generateAuthToken = function () {
   var user = this;
@@ -57,6 +57,24 @@ userSchema.methods.generateAuthToken = function () {
 
   return user.save().then(() => {
     return token
+  })
+}
+
+userSchema.statics.findByToken = function (token) {
+  var user = this;
+  var decoded;
+  
+  try{
+    decoded = jwt.verify(token , 'abc123')
+  }
+  catch (e){
+    return Promise.reject()
+  }
+
+  return user.findOne({
+    '_id': decoded._id,
+    'tokens.token': token,
+    'tokens.access':'auth'
   })
 }
 

@@ -14,3 +14,8 @@ module.exports.store = (req, res) => {
   })
   .catch((err) => res.status(400).send(err))
 }
+
+module.exports.showme = (req,res) => {
+  res.send(req.user)
+}
+
