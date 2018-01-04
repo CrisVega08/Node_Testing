@@ -4,7 +4,7 @@ const _ = require('lodash')
 module.exports.store = (req, res) => {
   let body = _.pick(req.body,['email', 'password', 'name'])
   let user = new User(body)
-  
+
   user.save().then((data) => {
     return user.generateAuthToken();
     //res.status(200).send({message:'user save!', data:data})

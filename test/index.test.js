@@ -2,66 +2,52 @@ const expect = require('expect')
 const request = require('supertest')
 
 const {app} = require('../index')
-const cliente = require('../models/clientes')
+const client = require('../models/clientes')
 const {ObjectID} = require('mongodb')
-const clientes = [
-  { 
-    _id: new ObjectID(),
-    name:"Cristian",
-    email:"cristian@email.com"
-  },
-  {
-    _id: new ObjectID(),
-    name:"Vega",
-    email:"email@example.com"
-  }
-]
+const {clients, populateClients} = require('./seed/seed')
 
-beforeEach((done)=>{
-  cliente.remove({}).then(()=> {
-    return cliente.insertMany(clientes);
-  }).then(() => done());
-})
+beforeEach(populateClients)
+
 describe('Post /cli', () => {
   it('should created a new client',(done) => {
     
-    var client = {
+    var clt = {
       name:"test",
       email: "test@example.com"
     }
    // var name = 'Cristian'
     request(app)
       .post('/cli')
-      .send(client)
+      .send(clt)
       .expect(200)
       .expect((res) => {
-        expect(res.body.client.name).toBe(client.name)
+        expect(res.body.client.name).toBe(clt.name)
       })
       .end((err , res)=>{
       if(err){
         return done(err)
       }
       
-      cliente.find({name:client.name}).then((data) => {
+      client.find({name:clt.name}).then((data) => {
         expect(data.length).toBe(1)
-        expect(data[0].name).toBe(client.name)
+        expect(data[0].name).toBe(clt.name)
         done();
       }).catch((e)=>done(e))
     })
   })
 
   it ('should not create it with invalid body data',(done)=>{
-    var client='';
+    var clt='';
     request(app)
     .post('/cli')
-    .send({client})
+    .send({clt})
     .expect(400)
     .end((err , res)=>{
     if(err){
       return done(err)
     }
     
-    cliente.find().then((data) => {
+    client.find().then((data) => {
       expect(data.length).toBe(2)
       //expect(data[0].name).toBe(client.name)
       done();
@@ -99,7 +85,7 @@ describe('GET /cli', ()=>{
 
 describe('Delete /cli', ()=>{
   it('Should remove a client', (done)=>{
-    let hexId = clientes[1]._id.toHexString();
+    let hexId = clients[1]._id.toHexString();
 
     request(app)
       .delete(`/cli/${hexId}`)
@@ -135,7 +121,7 @@ describe('Delete /cli', ()=>{
 
 describe('PATCH /cli/id', ()=> {
   it('Should update a client', (done) => {
-    let hexId = clientes[0]._id.toHexString()
+    let hexId = clients[0]._id.toHexString()
     let name = 'Francisco'
 
     request(app)

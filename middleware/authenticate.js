@@ -8,7 +8,7 @@ var authenticate = (req, res, next) =>{
 		
 		req.user = user
 		req.token = token
-		
+
 		next();
 	}).catch((e) => {
 		
@@ -16,4 +16,4 @@ var authenticate = (req, res, next) =>{
 	})
 }
 
-module.exports = {authenticate}
+module.exports = authenticate

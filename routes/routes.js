@@ -2,7 +2,7 @@ const express = require('express');
 
 const clienteController = require('../controllers/clientes')
 const userController = require('../controllers/user')
-var {authenticate} = require('../middleware/authenticate')
+var authenticate = require('../middleware/authenticate')
 var route = express.Router();
 
 //Cliente Routes
