@@ -1,10 +1,8 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const {ObjectID} = require('mongodb')
 
 const app = express()
 const api = require('./routes/routes')
-const Cliente = require('./models/clientes')
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());

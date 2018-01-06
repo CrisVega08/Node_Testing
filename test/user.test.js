@@ -57,7 +57,7 @@ describe('POST /usr', () => {
 					expect(user).toExist()
 					expect(user.password).toNotBe(userTest.password)
 					done()
-				})
+				}).catch((e) => done(e))
 			})
 	})
 	
