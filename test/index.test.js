@@ -4,7 +4,7 @@ const request = require('supertest')
 const {app} = require('../index')
 const client = require('../models/clientes')
 const {ObjectID} = require('mongodb')
-const {clients, populateClients} = require('./seed/seed')
+const {clients, populateClients, users} = require('./seed/seed')
 
 beforeEach(populateClients)
 
@@ -18,6 +18,7 @@ describe('Post /cli', () => {
    // var name = 'Cristian'
     request(app)
       .post('/cli')
+      .set('x-auth', users[0].tokens[0].token)
       .send(clt)
       .expect(200)
       .expect((res) => {
@@ -40,6 +41,7 @@ describe('Post /cli', () => {
     var clt='';
     request(app)
     .post('/cli')
+    .set('x-auth', users[0].tokens[0].token)
     .send({clt})
     .expect(400)
     .end((err , res)=>{
@@ -60,6 +62,7 @@ describe('GET /cli', ()=>{
   it('Should get all clients', (done)=>{
     request(app)
     .get('/cli')
+    .set('x-auth', users[0].tokens[0].token)
     .expect(200)
     .expect((res) => {
       expect(res.body.data.length).toBe(2);
@@ -71,6 +74,7 @@ describe('GET /cli', ()=>{
     let hexId = new ObjectID().toHexString();
     request(app)
       .get(`/cli/${hexId}`)
+      .set('x-auth', users[0].tokens[0].token)
       .expect(400)
       .end(done)
   })
@@ -78,6 +82,7 @@ describe('GET /cli', ()=>{
   it('shlud return 404 for non_object ids', (done) => {
     request(app)
       .get('/cli/123abd')
+      .set('x-auth', users[0].tokens[0].token)
       .expect(404)
       .end(done);
   })
@@ -89,6 +94,7 @@ describe('Delete /cli', ()=>{
 
     request(app)
       .delete(`/cli/${hexId}`)
+      .set('x-auth', users[0].tokens[0].token)
       .expect(200)
       .expect((res) => {
         expect(res.body.client._id).toBe(hexId)
@@ -97,7 +103,7 @@ describe('Delete /cli', ()=>{
         if(err) return done(err)
       })
 
-      cliente.findById(hexId).then((data) => {
+      client.findById(hexId).then((data) => {
         expect(data).toNotExist();
         done();
       }).catch((e)=>done(e))
@@ -107,6 +113,7 @@ describe('Delete /cli', ()=>{
     let hexid = new ObjectID().toHexString();
     request(app)
       .delete(`/cli/${hexid}`)
+      .set('x-auth', users[0].tokens[0].token)
       .expect(400)
       .end(done)
   })
@@ -114,6 +121,7 @@ describe('Delete /cli', ()=>{
   it('Should return 404 if objectID is invalid', (done) => {
     request(app)
     .delete('/cli/123abd')
+    .set('x-auth', users[0].tokens[0].token)
     .expect(404)
     .end(done);
   })
@@ -126,6 +134,7 @@ describe('PATCH /cli/id', ()=> {
 
     request(app)
       .patch(`/cli/${hexId}`)
+      .set('x-auth', users[0].tokens[0].token)
       .send({name})
       .expect(200)
       .expect((res) => {

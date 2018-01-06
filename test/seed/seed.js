@@ -6,6 +6,7 @@ const User = require('../../models/user')
 
 const userOneId = new ObjectID()
 const userTwoId = new ObjectID()
+
 const users = [{
 		_id: userOneId,
 		email: 'cv@mail.com',
@@ -26,12 +27,14 @@ const clients = [
 	{ 
 		_id: new ObjectID(),
 		name:"Cristian",
-		email:"cristian@email.com"
+		email:"cristian@email.com",
+		_creator: userOneId
 	},
 	{
 		_id: new ObjectID(),
 		name:"Vega",
-		email:"email@example.com"
+		email:"email@example.com",
+		_creator: userTwoId
 	}
 ]
 

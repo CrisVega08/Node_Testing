@@ -6,7 +6,8 @@ module.exports.store = (req, res) => {
   let cliente = new Cliente
   cliente.name = req.body.name;
   cliente.email = req.body.email;
-  
+  cliente._creator = req.user._id;
+
   cliente.save().then((data) => {
     res.status(200).send({message:'Cliente Almacenado', client:data})
   })

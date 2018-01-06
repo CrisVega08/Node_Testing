@@ -8,12 +8,12 @@ var authenticate = require('../middleware/authenticate')
 var route = express.Router();
 
 //Cliente Routes
-route.get('/cli/:id',clienteController.get)
-route.get('/cli', clienteController.getAll)
-route.post('/cli',clienteController.store)
-route.delete('/cli/:id',clienteController.delete)
+route.get('/cli/:id', authenticate, clienteController.get)
+route.get('/cli', authenticate, clienteController.getAll)
+route.post('/cli', authenticate, clienteController.store)
+route.delete('/cli/:id', authenticate, clienteController.delete)
 route.get('/rem',clienteController.remove)
-route.patch('/cli/:id', clienteController.update)
+route.patch('/cli/:id', authenticate, clienteController.update)
 
 //User Routes
 route.post('/usr', userController.store)
