@@ -1,0 +1,16 @@
+{
+  "test": {
+		"MONGODB_URI":"mongodb://localhost/CamareloTest",
+		"PORT": 3001,
+		"JWT_SECRET":"anfsdkfsldkjfkjfsdkjf"
+	},
+	"development": {
+		"MONGODB_URI":"mongodb://localhost/Camarelo",
+		"PORT": 3001,
+		"JWT_SECRET":"eowrioeuassadjfoieasmc,"
+	},
+	"production":{
+		"MONGODB_URI": "mongodb://Cristian08:NodeAngular2017@ds161446.mlab.com:61446/caramelo",
+		"JWT_SECRET": "dfkjdfpoeovndsfnmldkf,dfm"
+	}
+}
