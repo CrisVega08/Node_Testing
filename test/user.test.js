@@ -45,17 +45,17 @@ describe('POST /usr', () => {
 			.send(userTest)
 			.expect(200)
 			.expect((res) => {
-				expect(res.headers['x-auth']).toExist()
-				expect(res.body._id).toExist()
-				expect(res.body.password).toNotExist()
+				expect(res.headers['x-auth']).toBeTruthy()
+				expect(res.body._id).toBeTruthy()
+				expect(res.body.password).toBeFalsy()
 			})
 			.end((err) => {
 				if(err) done(err)
 
 				User.findOne({email:userTest.email}).then((user) => {
 					//console.log(user)
-					expect(user).toExist()
-					expect(user.password).toNotBe(userTest.password)
+					expect(user).toBeTruthy()
+					expect(user.password).not.toBe(userTest.password)
 					done()
 				}).catch((e) => done(e))
 			})
